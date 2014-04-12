@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-  .module('triplogWebApp', [
+  .module('triplog', [
     'ngCookies',
     'ngResource',
     'ngSanitize',
@@ -12,6 +12,10 @@ angular
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
+      })
+      .when('/trips', {
+        templateUrl: 'views/trips.html',
+        controller: 'TripsCtrl'
       })
       .otherwise({
         redirectTo: '/'
