@@ -18,7 +18,25 @@
   <body ng-app="triplog">
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="container">
+
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a ng-href="#">Register</a></li>
+          <li><a ng-href="#">Login</a></li>
+        </ul>
+        <h3 class="text-muted">Trip Log</h3>
+        <div class='clearfix'></div>
+      </div>
+
+      <div ng-view=""></div>
+
+      <div class="footer">
+        <p>&copy; <a href='http://github.com/basiclabs'>Basic Labs</a></p>
+      </div>
+
+
+    </div>
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
