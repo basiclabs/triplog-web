@@ -7,7 +7,10 @@ var tripLog = angular.module('triplog', [
   'ngRoute'
 ]);
 
-tripLog.config(function ($routeProvider, $provide) {
+tripLog.constant('ENV', 'development');
+
+tripLog.config(['$provide', function ($routeProvider, $provide) {
+  $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
   $routeProvider
     .when('/', {
       templateUrl: 'views/main.html',
