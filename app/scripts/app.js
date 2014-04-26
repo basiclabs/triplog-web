@@ -42,8 +42,8 @@ tripLog.run(['$httpBackend', 'Datafaker', '$rootScope', 'ENV', function($httpBac
     $httpBackend.whenPost('/trips').respond();
     $httpBackend.whenPost(/trips\/[0-9]*\/photos/)
 
-    $httpBackend.whenDelete(/trips\/[0-9]*/).respond();
-    $httpBackend.whenDelete(/trips\/[0-9]*\/photos\/[0-9]*/)
+    $httpBackend.whenDelete(/trips\/[0-9]*/).respond(200, "The trip has been removed.");
+    $httpBackend.whenDelete(/trips\/[0-9]*\/photos\/[0-9]*/).respond(200, "The photo has been removed.");
 
     $httpBackend.whenPut(/trips\/[0-9]*/).respond();
     $httpBackend.whenPut(/trips\/[0-9]*\/photos\/[0-9]*/).respond();
