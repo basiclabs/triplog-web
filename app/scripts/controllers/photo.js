@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('triplog')
-  .controller('TripIndexCtrl', function ($scope) {
+  .controller('PhotoCtrl', function ($scope) {
     $scope.hi = 'Hello';
   });
