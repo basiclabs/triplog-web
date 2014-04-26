@@ -32,3 +32,20 @@ tripLog.config(['$provide', function ($routeProvider, $provide) {
       redirectTo: '/'
     });
 });
+
+tripLog.run(['$httpBackend', 'Datafaker', '$rootScope', 'ENV', function($httpBackend, Datafaker, $rootScope, ENV) {
+  if(ENV === 'development') {
+    $httpBackend.whenGet('/trips').respond();
+    $httpBackend.whenGet(/trips\/[0-9]*/).respond();
+    $httpBackend.whenGet(/trips\/[0-9]*\/photos/).respond();
+
+    $httpBackend.whenPost('/trips').respond();
+    $httpBackend.whenPost(/trips\/[0-9]*\/photos/)
+
+    $httpBackend.whenDelete(/trips\/[0-9]*/).respond();
+    $httpBackend.whenDelete(/trips\/[0-9]*\/photos\/[0-9]*/)
+
+    $httpBackend.whenPut(/trips\/[0-9]*/).respond();
+    $httpBackend.whenPut(/trips\/[0-9]*\/photos\/[0-9]*/).respond();
+  }
+}])
