@@ -8,6 +8,6 @@ angular.module('triplog')
       'Karma'
     ];
     $http.get('/trips/1/photos').success(function(res) {
-    	console.log(res);
-    })
+      console.log(res);
+    });
   }]);
