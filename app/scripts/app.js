@@ -52,9 +52,9 @@ tripLog.config(['$provide', function ($routeProvider, $provide) {
 
 tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBackend, DataFaker, $rootScope, ENV) {
   if(ENV === 'development') {
-    $httpBackend.whenGet('/trips').respond();
-    $httpBackend.whenGet(/trips\/[0-9]*/).respond();
-    $httpBackend.whenGet(/trips\/[0-9]*\/photos/).respond();
+    $httpBackend.whenGet('/trips').respond(DataFaker.generateTrips(10));
+    $httpBackend.whenGet(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
+    $httpBackend.whenGet(/trips\/[0-9]*\/photos/).respond(Faker.Image.cats());
 
     $httpBackend.whenPost('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);
@@ -63,7 +63,7 @@ tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBac
     });
     $httpBackend.whenPost(/trips\/[0-9]*\/photos/).respond(function(method, url, data) {
       var photo = JSON.parse(data);
-      photo.id = generateID;
+      photo.id = generateID();
       return [200, photo];
     });
 
