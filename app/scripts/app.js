@@ -26,7 +26,7 @@ var tripLog = angular.module('triplog', [
 
 tripLog.constant('ENV', 'development');
 
-tripLog.config(['$provide', function ($routeProvider, $provide) {
+tripLog.config(['$routeProvider', '$provide', function ($routeProvider, $provide) {
   $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
   $routeProvider
   .when('/', {
@@ -48,66 +48,69 @@ tripLog.config(['$provide', function ($routeProvider, $provide) {
   .otherwise({
     redirectTo: '/'
   });
+}]);
+
+angular.module('triplog').service('DataFaker', function() {
+
+  this.generateTrips = function(count) {
+    var trips = [];
+    for(var i = 0; i < count; i++) {
+      trips.push({
+        id: generateID(),
+        name: Faker.Address.streetName(),
+        date: Faker.Date.past(),
+        publishedDate: Faker.Date.future(),
+        description: Faker.Lorem.sentences(),
+        private: randomPrivate(),
+        userid: generateID()
+      });
+    }
+    return trips;
+  }
+
+  this.generateTrip = function() {
+    return this.generateTrips(1);
+  }
+  
+  this.generateTripPhotos = function() {
+    return Faker.Image.cats;
+  }
+
+  function randomPrivate() {
+    var privacy = ['true', 'false'];
+    return privacy[Math.floor(Math.random()*privacy.length)];
+  }
+
 });
 
 tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBackend, DataFaker, $rootScope, ENV) {
   if(ENV === 'development') {
-    $httpBackend.whenGet('/trips').respond(DataFaker.generateTrips(10));
-    $httpBackend.whenGet(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
-    $httpBackend.whenGet(/trips\/[0-9]*\/photos/).respond(Faker.Image.cats());
+    $httpBackend.whenGET(/^views\//).passThrough();
+    $httpBackend.whenGET('/trips').respond(DataFaker.generateTrips(10));
+    $httpBackend.whenGET(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
+    $httpBackend.whenGET(/trips\/[0-9]*\/photos/).respond(DataFaker.generateTripPhotos());
 
-    $httpBackend.whenPost('/trips').respond(function(method, url, data) {
+    $httpBackend.whenPOST('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);
       trip.id = generateID();
       return [200, trip];
     });
-    $httpBackend.whenPost(/trips\/[0-9]*\/photos/).respond(function(method, url, data) {
+    $httpBackend.whenPOST(/trips\/[0-9]*\/photos/).respond(function(method, url, data) {
       var photo = JSON.parse(data);
       photo.id = generateID();
       return [200, photo];
     });
 
-    $httpBackend.whenDelete(/trips\/[0-9]*/).respond(200, "The trip has been removed.");
-    $httpBackend.whenDelete(/trips\/[0-9]*\/photos\/[0-9]*/).respond(200, "The photo has been removed.");
+    $httpBackend.whenDELETE(/trips\/[0-9]*/).respond(200, "The trip has been removed.");
+    $httpBackend.whenDELETE(/trips\/[0-9]*\/photos\/[0-9]*/).respond(200, "The photo has been removed.");
 
-    $httpBackend.whenPut(/trips\/[0-9]*/).respond(function(method, url, data) {
+    $httpBackend.whenPUT(/trips\/[0-9]*/).respond(function(method, url, data) {
       var trip = JSON.parse(data);
       return [200, trip];
     });
-    $httpBackend.whenPut(/trips\/[0-9]*\/photos\/[0-9]*/).respond(function(method, url, data) {
+    $httpBackend.whenPUT(/trips\/[0-9]*\/photos\/[0-9]*/).respond(function(method, url, data) {
       var photo = JSON.parse(data);
       return [200, photo];
     });
-  }
-
-  angular.module('triplog').service('DataFaker', function() {
-
-    this.generateTrips = function(count) {
-      var trips = [];
-      for(var i = 0; i < count; i++) {
-        trips.push({
-          id: generateID(),
-          name: Faker.Address.streetName(),
-          date: Faker.Date.past(),
-          publishedDate: Faker.Date.future(),
-          description: Faker.Lorem.sentences(),
-          private: randomPrivate(),
-          userid: generateID()
-        });
-      }
-      return trips;
-    }
-
-    this.generateTrip = function() {
-      return this.generateTrips(1);
-    }
-    
-    this.generateTripPhotos = Faker.Image.cats;
-
-    function randomPrivate() {
-      var privacy = ['true', 'false'];
-      return privacy[Math.floor(Math.random()*privacy.length)];
-    }
-
-  });  
+  }  
 }])
