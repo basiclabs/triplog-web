@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('triplog').service('DataFaker', function() {
 
   this.generateTrips = function(count) {
@@ -19,7 +21,7 @@ angular.module('triplog').service('DataFaker', function() {
   this.generateTrip = function() {
     return this.generateTrips(1);
   };
-  
+
   this.generateTripPhotos = function(count) {
 
     var photos = [];
