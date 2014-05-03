@@ -13,19 +13,19 @@ tripLog.config(['$routeProvider', '$provide', function ($routeProvider, $provide
   $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
   $routeProvider
   .when('/', {
-    templateUrl: 'views/main.html',
+    templateUrl: '/views/main.html',
     controller: 'HomeCtrl'
   })
   .when('/trips', {
-    templateUrl: 'views/trips/index.html',
+    templateUrl: '/views/trips/index.html',
     controller: 'TripIndexCtrl'
   })
   .when('/trips/:id', {
-    templateUrl: 'views/trips/show.html',
+    templateUrl: '/views/trips/show.html',
     controller: 'TripShowCtrl'
   })
   .when('/trips/:id/photos/:id', {
-    templateUrl: 'views/photo/show.html',
+    templateUrl: '/views/photo/show.html',
     controller: 'PhotoCtrl'
   })
   .otherwise({
@@ -54,7 +54,7 @@ angular.module('triplog').service('DataFaker', function() {
   this.generateTrip = function() {
     return this.generateTrips(1);
   };
-  
+
   this.generateTripPhotos = function(count) {
 
     var photos = [];
@@ -81,10 +81,10 @@ angular.module('triplog').service('DataFaker', function() {
 
 tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBackend, DataFaker, $rootScope, ENV) {
   if(ENV === 'development') {
-    $httpBackend.whenGET(/^views\//).passThrough();
-    $httpBackend.whenGET('/trips').respond(DataFaker.generateTrips(10));
-    $httpBackend.whenGET(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
-    $httpBackend.whenGET(/trips\/[0-9]*\/photos/).respond(DataFaker.generateTripPhotos(10));
+    $httpBackend.whenGET(/\/views/).passThrough();
+    $httpBackend.whenGET(/\/api\/trips/).respond(DataFaker.generateTrips(10));
+    $httpBackend.whenGET(/\/api\/trips\/[\d]/).respond(DataFaker.generateTrip());
+    $httpBackend.whenGET(/\/api\/trips\/[\d]\/photos/).respond(DataFaker.generateTripPhotos(10));
 
     $httpBackend.whenPOST('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);
