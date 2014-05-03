@@ -73,7 +73,6 @@ angular.module('triplog').service('DataFaker', function() {
   }
   
   this.generateTripPhotos = function() {
-    console.log(Faker.Image.cats());
     return Faker.Image.cats();
   }
 

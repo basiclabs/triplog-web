@@ -7,7 +7,7 @@ angular.module('triplog')
       'AngularJS',
       'Karma'
     ];
-    $http.get('/trips/1/photos').success(function(res) {
+    $http.put('/trips/1', {"nasd": 'gayyyyyyy'}).success(function(res) {
     	console.log(res);
     })
   }]);
