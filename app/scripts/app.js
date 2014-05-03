@@ -58,8 +58,8 @@ angular.module('triplog').service('DataFaker', function() {
       trips.push({
         id: generateID(),
         name: Faker.Address.streetName(),
-        date: Faker.Date.past(),
-        publishedDate: Faker.Date.future(),
+        date: Faker.Date.past(1),
+        publishedDate: Faker.Date.future(1),
         description: Faker.Lorem.sentences(),
         private: randomPrivate(),
         userid: generateID()
@@ -72,8 +72,21 @@ angular.module('triplog').service('DataFaker', function() {
     return this.generateTrips(1);
   }
   
-  this.generateTripPhotos = function() {
-    return Faker.Image.cats;
+  this.generateTripPhotos = function(count) {
+
+    var photos = [];
+    for(var i = 0; i < count; i++) {
+      photos.push({
+        id: generateID(),
+        caption: Faker.Lorem.sentences(),
+        latitude: Faker.Address.latitude,
+        longitude: Faker.Address.longitude,
+        tripID: generateID(),
+        date: Faker.Date.past(1),
+        url: Faker.Image.cats()
+      });
+    }
+    return photos;
   }
 
   function randomPrivate() {
@@ -88,7 +101,7 @@ tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBac
     $httpBackend.whenGET(/^views\//).passThrough();
     $httpBackend.whenGET('/trips').respond(DataFaker.generateTrips(10));
     $httpBackend.whenGET(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
-    $httpBackend.whenGET(/trips\/[0-9]*\/photos/).respond(DataFaker.generateTripPhotos());
+    $httpBackend.whenGET(/trips\/[0-9]*\/photos/).respond(DataFaker.generateTripPhotos(10));
 
     $httpBackend.whenPOST('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);
