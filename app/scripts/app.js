@@ -58,8 +58,8 @@ angular.module('triplog').service('DataFaker', function() {
       trips.push({
         id: generateID(),
         name: Faker.Address.streetName(),
-        date: Faker.Date.past(),
-        publishedDate: Faker.Date.future(),
+        date: Faker.Date.past(1),
+        publishedDate: Faker.Date.future(1),
         description: Faker.Lorem.sentences(),
         private: randomPrivate(),
         userid: generateID()
@@ -73,7 +73,8 @@ angular.module('triplog').service('DataFaker', function() {
   }
   
   this.generateTripPhotos = function() {
-    return Faker.Image.cats;
+    console.log(Faker.Image.cats());
+    return Faker.Image.cats();
   }
 
   function randomPrivate() {
