@@ -26,7 +26,7 @@ var tripLog = angular.module('triplog', [
 
 tripLog.constant('ENV', 'development');
 
-tripLog.config(['$provide', function ($routeProvider, $provide) {
+tripLog.config(['$routeProvider', '$provide', function ($routeProvider, $provide) {
   $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
   $routeProvider
   .when('/', {
@@ -48,66 +48,82 @@ tripLog.config(['$provide', function ($routeProvider, $provide) {
   .otherwise({
     redirectTo: '/'
   });
+}]);
+
+angular.module('triplog').service('DataFaker', function() {
+
+  this.generateTrips = function(count) {
+    var trips = [];
+    for(var i = 0; i < count; i++) {
+      trips.push({
+        id: generateID(),
+        name: Faker.Address.streetName(),
+        date: Faker.Date.past(1),
+        publishedDate: Faker.Date.future(1),
+        description: Faker.Lorem.sentences(),
+        private: randomPrivate(),
+        userid: generateID()
+      });
+    }
+    return trips;
+  }
+
+  this.generateTrip = function() {
+    return this.generateTrips(1);
+  }
+  
+  this.generateTripPhotos = function(count) {
+
+    var photos = [];
+    for(var i = 0; i < count; i++) {
+      photos.push({
+        id: generateID(),
+        caption: Faker.Lorem.sentences(),
+        latitude: Faker.Address.latitude,
+        longitude: Faker.Address.longitude,
+        tripID: generateID(),
+        date: Faker.Date.past(1),
+        url: Faker.Image.cats()
+      });
+    }
+    return photos;
+  }
+
+  function randomPrivate() {
+    var privacy = ['true', 'false'];
+    return privacy[Math.floor(Math.random()*privacy.length)];
+  }
+
 });
 
 tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBackend, DataFaker, $rootScope, ENV) {
   if(ENV === 'development') {
-    $httpBackend.whenGet('/trips').respond();
-    $httpBackend.whenGet(/trips\/[0-9]*/).respond();
-    $httpBackend.whenGet(/trips\/[0-9]*\/photos/).respond();
+    $httpBackend.whenGET(/^views\//).passThrough();
+    $httpBackend.whenGET('/trips').respond(DataFaker.generateTrips(10));
+    $httpBackend.whenGET(/trips\/[0-9]*/).respond(DataFaker.generateTrip());
+    $httpBackend.whenGET(/trips\/[0-9]*\/photos/).respond(DataFaker.generateTripPhotos(10));
 
-    $httpBackend.whenPost('/trips').respond(function(method, url, data) {
+    $httpBackend.whenPOST('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);
       trip.id = generateID();
       return [200, trip];
     });
-    $httpBackend.whenPost(/trips\/[0-9]*\/photos/).respond(function(method, url, data) {
+    $httpBackend.whenPOST(/trips\/[0-9]*\/photos/).respond(function(method, url, data) {
       var photo = JSON.parse(data);
-      photo.id = generateID;
+      photo.id = generateID();
       return [200, photo];
     });
 
-    $httpBackend.whenDelete(/trips\/[0-9]*/).respond(200, "The trip has been removed.");
-    $httpBackend.whenDelete(/trips\/[0-9]*\/photos\/[0-9]*/).respond(200, "The photo has been removed.");
+    $httpBackend.whenDELETE(/trips\/[0-9]*/).respond(200, "The trip has been removed.");
+    $httpBackend.whenDELETE(/trips\/[0-9]*\/photos\/[0-9]*/).respond(200, "The photo has been removed.");
 
-    $httpBackend.whenPut(/trips\/[0-9]*/).respond(function(method, url, data) {
+    $httpBackend.whenPUT(/trips\/[0-9]*/).respond(function(method, url, data) {
       var trip = JSON.parse(data);
       return [200, trip];
     });
-    $httpBackend.whenPut(/trips\/[0-9]*\/photos\/[0-9]*/).respond(function(method, url, data) {
+    $httpBackend.whenPUT(/trips\/[0-9]*\/photos\/[0-9]*/).respond(function(method, url, data) {
       var photo = JSON.parse(data);
       return [200, photo];
     });
-  }
-
-  angular.module('triplog').service('DataFaker', function() {
-
-    this.generateTrips = function(count) {
-      var trips = [];
-      for(var i = 0; i < count; i++) {
-        trips.push({
-          id: generateID(),
-          name: Faker.Address.streetName(),
-          date: Faker.Date.past(),
-          publishedDate: Faker.Date.future(),
-          description: Faker.Lorem.sentences(),
-          private: randomPrivate(),
-          userid: generateID()
-        });
-      }
-      return trips;
-    }
-
-    this.generateTrip = function() {
-      return this.generateTrips(1);
-    }
-    
-    this.generateTripPhotos = Faker.Image.cats;
-
-    function randomPrivate() {
-      var privacy = ['true', 'false'];
-      return privacy[Math.floor(Math.random()*privacy.length)];
-    }
-
-  });  
+  }  
 }])
