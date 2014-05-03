@@ -10,5 +10,5 @@ angular.module('triplog.services').service(['$http', function() {
 
     self.token = token;
     self.trips = [];
-  }
+  };
 }]);
