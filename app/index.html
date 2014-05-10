@@ -22,10 +22,11 @@
 
       <div class="header">
         <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Register</a></li>
-          <li><a ng-href="#">Login</a></li>
+          <li><a ng-href="#trips/1">Trip</a></li>
+          <li><a ng-href="#trips">Trips</a></li>
+          <li><a ng-href="#trips/1/photos/1">Photos</a></li>
         </ul>
-        <h3 class="text-muted">Trip Log</h3>
+        <h3 class="text-muted"><a href='#'>Trip Log</a></h3>
         <div class='clearfix'></div>
       </div>
 
@@ -61,7 +62,9 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/home.js"></script>
-        <script src="scripts/controllers/trips.js"></script>
+        <script src="scripts/controllers/trips/index.js"></script>
+        <script src="scripts/controllers/trips/show.js"></script>
+        <script src="scripts/controllers/photos/show.js"></script>
         <script src="scripts/services/dataFaker.js"></script>
         <!-- endbuild -->
 </body>

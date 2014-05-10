@@ -7,7 +7,4 @@ angular.module('triplog')
       'AngularJS',
       'Karma'
     ];
-    $http.get('/api/trips/1/photos').success(function(res) {
-      console.log(res);
-    });
   }]);

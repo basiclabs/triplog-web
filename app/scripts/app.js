@@ -25,8 +25,8 @@ tripLog.config(['$routeProvider', '$provide', function ($routeProvider, $provide
     controller: 'TripShowCtrl'
   })
   .when('/trips/:id/photos/:id', {
-    templateUrl: '/views/photo/show.html',
-    controller: 'PhotoCtrl'
+    templateUrl: '/views/photos/show.html',
+    controller: 'PhotoShowCtrl'
   })
   .otherwise({
     redirectTo: '/'
@@ -36,9 +36,9 @@ tripLog.config(['$routeProvider', '$provide', function ($routeProvider, $provide
 tripLog.run(['$httpBackend', 'DataFaker', '$rootScope', 'ENV', function($httpBackend, DataFaker, $rootScope, ENV) {
   if(ENV === 'development') {
     $httpBackend.whenGET(/\/views/).passThrough();
-    $httpBackend.whenGET(/\/api\/trips/).respond(DataFaker.generateTrips(10));
-    $httpBackend.whenGET(/\/api\/trips\/[\d]/).respond(DataFaker.generateTrip());
-    $httpBackend.whenGET(/\/api\/trips\/[\d]\/photos/).respond(DataFaker.generateTripPhotos(10));
+    $httpBackend.whenGET(/\/api\/trips\/?$/).respond(DataFaker.generateTrips(10));
+    $httpBackend.whenGET(/\/api\/trips\/[\d]\/?$/).respond(DataFaker.generateTrip());
+    $httpBackend.whenGET(/\/api\/trips\/[\d]\/photos\/?$/).respond(DataFaker.generateTripPhotos(10));
 
     $httpBackend.whenPOST('/trips').respond(function(method, url, data) {
       var trip = JSON.parse(data);

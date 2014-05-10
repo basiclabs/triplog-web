@@ -6,20 +6,20 @@ angular.module('triplog').service('DataFaker', function() {
     var trips = [];
     for(var i = 0; i < count; i++) {
       trips.push({
-        id: Faker.random.number(),
+        id: Faker.random.number(1000),
         name: Faker.Address.streetName(),
         date: Faker.Date.past(1),
         publishedDate: Faker.Date.future(1),
         description: Faker.Lorem.sentences(),
         private: randomPrivate(),
-        userid: Faker.random.number()
+        userid: Faker.random.number(1000)
       });
     }
     return trips;
   };
 
   this.generateTrip = function() {
-    return this.generateTrips(1);
+    return this.generateTrips(1)[0];
   };
 
   this.generateTripPhotos = function(count) {
@@ -27,13 +27,13 @@ angular.module('triplog').service('DataFaker', function() {
     var photos = [];
     for(var i = 0; i < count; i++) {
       photos.push({
-        id: Faker.random.number(),
+        id: Faker.random.number(1000),
         caption: Faker.Lorem.sentences(),
         latitude: Faker.Address.latitude,
         longitude: Faker.Address.longitude,
-        tripID: Faker.random.number(),
+        tripID: Faker.random.number(1000),
         date: Faker.Date.past(1),
-        url: Faker.Image.cats()
+        url: Faker.Image.imageUrl(800, 500, 'cats')
       });
     }
     return photos;
